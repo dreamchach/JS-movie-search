@@ -1,5 +1,7 @@
 # movie-search
 
+<a href="https://gorgeous-bombolone-aef9c3.netlify.app/">Demo</a>
+
 ## 요구사항
 
 필수 요구사항은 꼭 달성해야 하는 목표로, 수정/삭제는 불가하고 추가는 가능합니다.    
