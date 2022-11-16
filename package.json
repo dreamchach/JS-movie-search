@@ -1,0 +1,27 @@
+{
+  "name": "movie-search",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dreamchach/movie-search.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dreamchach/movie-search/issues"
+  },
+  "homepage": "https://github.com/dreamchach/movie-search#readme",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.8.0",
+    "axios": "^1.1.3",
+    "buffer": "^5.7.1",
+    "parcel": "^2.8.0"
+  }
+}

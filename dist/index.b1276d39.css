@@ -1,0 +1,300 @@
+html {
+  min-width: 450px;
+}
+
+body {
+  min-width: 450px;
+  min-width: 450px;
+  justify-content: center;
+  display: flex;
+  position: relative;
+}
+
+body header {
+  min-width: 450px;
+  width: 100%;
+  height: 120px;
+  background-color: #8a2be2;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  display: flex;
+}
+
+body header .logo {
+  color: #fff;
+  min-width: 330px;
+  margin: 0 20px;
+  font-size: 35px;
+  font-weight: 700;
+  display: inline-block;
+}
+
+body header .search-bar {
+  min-width: 330px;
+  width: calc(100% - 330px);
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+body header .search-bar input {
+  width: 30%;
+  height: 50px;
+  box-sizing: border-box;
+  margin-left: 10px;
+  font-size: 25px;
+}
+
+body header .search-bar select {
+  height: 50px;
+}
+
+body header button.search {
+  height: 50px;
+  color: #fff;
+  background-color: #8a2be2;
+  border: 3px solid #fff;
+  border-radius: 10px;
+  margin-right: 10px;
+  font-size: 30px;
+  box-shadow: 3px 3px 3px 3px #0000004d;
+}
+
+body header button.search:hover {
+  color: #ffffffb3;
+  border: 3px solid #ffffffb3;
+  box-shadow: 5px 5px 5px 5px #00000080;
+}
+
+body main {
+  min-width: 450px;
+  position: absolute;
+  top: 150px;
+}
+
+body main .movies {
+  width: 80%;
+  background-color: #fff;
+  border-radius: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px auto;
+  padding: 20px 40px 200px;
+  display: flex;
+}
+
+body main .movies .movie {
+  width: 250px;
+  height: 370px;
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 20px;
+  position: relative;
+  box-shadow: 3px 3px 3px 3px #0000004d;
+}
+
+body main .movies .movie img {
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+}
+
+body main .movies .movie h2 {
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  background-color: #8a2be24d;
+  border-radius: 0 0 10px 10px;
+  margin: 0 auto;
+  padding: 20px;
+  font-size: 15px;
+  font-weight: 700;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+body main .movies .movie div.year {
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  background-color: #8a2be24d;
+  margin: 0 auto;
+  padding: 10px 10px 0;
+  font-size: 13px;
+  position: absolute;
+  bottom: 55px;
+  left: 0;
+  right: 0;
+}
+
+body main .movies .movie:hover {
+  width: 270px;
+  height: 390px;
+  transition: all .3s;
+  box-shadow: 5px 5px 5px 5px #00000080;
+}
+
+body main .movies .movie:hover h2 {
+  background-color: #8a2be280;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+body main .movies .movie:hover div.year {
+  background-color: #8a2be280;
+  font-size: 15px;
+  font-weight: 700;
+  bottom: 57px;
+}
+
+body main .action {
+  width: 100%;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  bottom: 0;
+}
+
+body main .action button.more {
+  height: 50px;
+  color: #fff;
+  background-color: #8a2be2;
+  border: 3px solid #fff;
+  border-radius: 10px;
+  margin-right: 10px;
+  font-size: 30px;
+  box-shadow: 3px 3px 3px 3px #0000004d;
+}
+
+body main .action button.more:hover {
+  color: #ffffffb3;
+  border: 3px solid #ffffffb3;
+  box-shadow: 5px 5px 5px 5px #00000080;
+}
+
+body div.modal {
+  min-width: 450px;
+  width: 80%;
+  height: 100%;
+  box-shadow: "0 4px 8px 1 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.2)";
+  z-index: 9999;
+  box-sizing: border-box;
+  -ms-overflow-style: none;
+  background-color: #fff;
+  border: 3px solid #8a2be2;
+  border-radius: 15px;
+  margin: 0 auto;
+  padding: 40px 20px 20px;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
+
+body div.modal::-webkit-scrollbar {
+  display: none !important;
+}
+
+body div.modal .modal-flex {
+  width: 100%;
+  height: max-content;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+body div.modal .modal-flex .movie-title {
+  text-align: center;
+  width: 100%;
+  padding-bottom: 20px;
+  font-size: 35px;
+  font-weight: 700;
+}
+
+body div.modal .modal-flex img {
+  max-width: 350px;
+  min-width: 350px;
+  border-radius: 10px;
+  margin: 0 100%;
+}
+
+body div.modal .modal-flex .movie-date, body div.modal .modal-flex .movie-time {
+  color: #fff;
+  background-color: #8a2be2;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 10px;
+  font-size: 13px;
+}
+
+body div.modal .modal-flex .movie-plot {
+  max-width: 100%;
+  min-width: 100%;
+  margin: 0 100%;
+  padding: 10px;
+  line-height: 20px;
+}
+
+body div.modal .modal-flex h3 {
+  color: #8a2be2;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 25px;
+  font-weight: 700;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+body div.modal .modal-flex .movie-actor, body div.modal .modal-flex .movie-director, body div.modal .modal-flex .movie-production, body div.modal .modal-flex .movie-genre {
+  width: auto;
+  box-sizing: border-box;
+  text-align: center;
+  min-width: 300px;
+  margin: 10px 20px 20px;
+  padding: 50px 20px 20px;
+  position: relative;
+}
+
+body div.modal .material-symbols-outlined {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  color: #8a2be2;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+body div.modal-background {
+  z-index: 9998;
+  width: 100%;
+  height: 100%;
+  background-color: #0000004d;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+/*# sourceMappingURL=index.b1276d39.css.map */
