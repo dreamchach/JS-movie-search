@@ -1,211 +1,147 @@
-const inputEl=document.querySelector("input")
-const searchBtnEl=document.querySelector("button.search")
-let movieEl=document.querySelector("div.movies")
-const moreBtnEl=document.querySelector("button.more")
-const page=1
+import "./env.js";
 
-import axios from "axios"
-function getMovies(movie,page=1,year=null,type="movie"){
-    axios
-    .get(`https://www.omdbapi.com/?apikey=7035c60c&s=${movie}&page=${page}&y=${year}&type=${type}`)
-    .then((response)=>{
-        console.log(response)
+const db_apikey = process.env.APIKEY;
+const container = document.getElementById("root");
+const ajax = new XMLHttpRequest();
 
-        for(let movieel of response.data.Search){
-            console.log(movieel)
-            
-            const el=document.createElement("div")
-            el.classList.add("movie")
-            const titleEl=document.createElement("h2")
-            titleEl.classList.add("title")
-            titleEl.textContent=movieel.Title
-            const imgEl=document.createElement("img")
-            imgEl.classList.add("movie-poster")
-            imgEl.src=movieel.Poster
-            const yearEl=document.createElement("div")
-            yearEl.classList.add("year")
-            yearEl.textContent=movieel.Year
-            movieEl.append(el)
-            el.append(titleEl,imgEl,yearEl)
-            
-            el.addEventListener("click",()=>{
-                console.log(movieel.Title)
-                console.log(movieel.imdbID)
-                
-                let movieInfo=document.createElement("div")
-                movieInfo.classList.add("modal")
-                const body=document.querySelector("body")
-                body.append(movieInfo)
-                let modalFlex=document.createElement("div")
-                modalFlex.classList.add("modal-flex")
-                movieInfo.append(modalFlex)
-                
-                function getMovieInfo(id){
-                    axios
-                    .get(`https://www.omdbapi.com/?apikey=7035c60c&i=${id}&plot=full`)
-                    .then((response)=>{
-                        console.log(response)
+let recommend = [];
 
-                        const tiEl=document.createElement("div")
-                        tiEl.textContent=response.data.Title
-                        tiEl.classList.add("movie-title")
-                        const photoEl=document.createElement("img")
-                        photoEl.src=response.data.Poster
-                        photoEl.classList.add("movie-photo")
-                        const dateEl=document.createElement("div")
-                        dateEl.classList.add("movie-date")
-                        dateEl.textContent=response.data.Released
-                        const timeEl=document.createElement("div")
-                        timeEl.classList.add("movie-time")
-                        timeEl.textContent=response.data.Runtime
-                        const plotEl=document.createElement("div")
-                        plotEl.classList.add("movie-plot")
-                        plotEl.textContent=response.data.Plot
-                        
-                        // const ratesEl=document.createElement("div")
-                        // ratesEl.classList.add("rates")
-                        // const rating=document.createElement("h3")
-                        // rating.append("Rating")
-                        // ratesEl.append(rating)
-                        // for(let i=0;i<(response.data.Ratings.length);i+=1){
-                        //     let rateEl=document.createElement("div")
-                        //     let rateElclass=response.data.Ratings[i].Source
-                        //     console.log(rateElclass)
-                        //     rateEl.textContent=response.data.Ratings[i].value
-                        //     rateEl.classList.add(`${rateElclass}`)
-                        //     let rateIEl=document.createElement("div")
-                        //     rateIEl.classList.add(`${rateElclass}`)
-                        //     rateIEl.classList.add("backgroundImage")
-                        //     ratesEl.append(rateEl,rateIEl)
-                        // }
-                        
-                        const actorsEl=document.createElement("div")
-                        actorsEl.textContent=response.data.Actors
-                        actorsEl.classList.add("movie-actor")
-                        const directorEl=document.createElement("div")
-                        directorEl.textContent=response.data.Director
-                        directorEl.classList.add("movie-director")
-                        const productionEl=document.createElement("div")
-                        productionEl.textContent=response.data.Production
-                        productionEl.classList.add("movie-production")
-                        const genreEl=document.createElement("div")
-                        genreEl.textContent=response.data.Genre
-                        genreEl.classList.add("movie-genre")
-                        const closeEl=document.createElement("div")
-                        closeEl.classList.add("material-symbols-outlined")
-                        closeEl.textContent="close"
+const getData = (url) => {
+  ajax.open("GET", url, false);
+  ajax.send();
+  return JSON.parse(ajax.response);
+};
 
-                        modalFlex.append(tiEl,photoEl,dateEl,timeEl,plotEl,actorsEl,directorEl,productionEl,genreEl,closeEl)
-                        // movieInfo.append(ratesEl)
-                        const actortitleEl=document.createElement("h3")
-                        actortitleEl.append("Actors")
-                        actorsEl.append(actortitleEl)
-                        const directorTitleEl=document.createElement("h3")
-                        directorTitleEl.append("Director")
-                        directorEl.append(directorTitleEl)
-                        const productionTitleEl=document.createElement("h3")
-                        productionTitleEl.append("Production")
-                        productionEl.append(productionTitleEl)
-                        const genreTitleEl=document.createElement("h3")
-                        genreTitleEl.append("genre")
-                        genreEl.append(genreTitleEl)
-                        modal()
-                    })
-                }
-                let key=movieel.imdbID
-                getMovieInfo(`${key}`)
-            })            
-        }
-        return response
-    })
-}
+const firstRender = (data) => {
+  let template = `
+      <div>
+          <header>
+              <h1>Where is myMovie?</h1>
+              <input type="search"/>
+              {{__login?__}}
+          </header>
+          <aside>
+              <div>별점</div>
+              <a href="#/like/fivestar">*****</a>
+              <a href="#/like/fourstar">****</a>
+              <a href="#/like/threestar">***</a>
+              <a href="#/like/twotar">**</a>
+              <a href="#/like/onestar">*</a>
+          </aside>
+          <main>
+              {{__movies_data__}}
+          </main>
+      </div>
+    `;
+  template = template.replace("{{__movies_data__}}", data || "");
+  container.innerHTML = template;
+};
 
-getMovies("`${movie}`",1,2014,"`${type}`")
+const movieSearchRender = () => {
+  let currentPage = location.hash.substring(7) || 1;
+  let MOVIE_URL = `https://www.omdbapi.com/?apikey=${db_apikey}&s=@moviename&page=${currentPage}`;
+  const movie = getData(MOVIE_URL.replace("@moviename", location.search));
+  let data = [];
 
-function removeMoreBtn(movie,page,year,type){
-    axios
-    .get(`https://www.omdbapi.com/?apikey=7035c60c&s=${movie}&page=${page}&y=${year}&type=${type}`)
-    .then((response)=>{
-        console.log(response)
-        console.log(response.data.totalResults)
-        let remove=response.data.totalResults
-        if(document.querySelectorAll("div.movie").length>=Number(remove)){
-            console.log("ladybug")
-            moreBtnEl.style.display="none"
-        }
-        else{moreBtnEl.style.display="block"}
-    })
-}
-removeMoreBtn("`${movie}`",`${page}`,2014,"`${type}`")
+  getData(MOVIE_URL.replace("@moviename", location.search));
 
-searchBtnEl.addEventListener("click",()=>{
-    let el=document.querySelectorAll("div.movie")
-    for(let i=0; i<=el.length-1;i+=1){
-        console.log(i)
-        el[i].parentNode.removeChild(el[i])
+  data.push(`<div><ul>`);
+  for (let i = 0; i < movie.Search.length; i += 1) {
+    data.push(`
+        <a href="/page=${movie.Search[i].imdbID}">
+            <img src="${movie.Search[i].Poster}"/>
+            <div>${movie.Search[i].Title}(${movie.Search[i].Year})</div>
+        </a>
+    `);
+    recommend.push(`${movie.Search[i].imdbID}`);
+  }
+  data.push(`</ul></div><div>`);
+  if (currentPage > 1) {
+    data.push(`
+        <a href="#/page=${currentPage - 1}">Prev</a>
+    `);
+  }
+  if (movie.totalResults > currentPage * 10) {
+    data.push(`
+        <a href="#/page=${Number(currentPage) + 1}">Next</a>
+    `);
+  }
+  firstRender(data.join(""));
+};
+
+const movieRender = () => {
+  if (location.search !== "") {
+    movieSearchRender();
+  }
+
+  if (location.pathname.substring(1, 5) === "page") {
+    if (location.search !== "") {
+      location.pathname = "";
+      movieSearchRender();
     }
-    moreBtnEl.style.display="block"
-    let typeEls=document.getElementById("type")
-    let type=typeEls.value
-    console.log(type)
-    let yearEls=document.getElementById("year")
-    let year=yearEls.value
-    console.log(year)
-    let movie=inputEl.value
-    console.log(movie)
-    getMovies(`"${movie}"`,1,`${year}`,`"${type}"`)
-    removeMoreBtn(`"${movie}"`,1,`${year}`,`"${type}"`)
-    getId(`"${movie}"`,1,`${year}`,`"${type}"`)
-})
-inputEl.addEventListener("keypress",function(key){
-    if(key.key==="Enter"){
-        let movie=inputEl.value
-        console.log(movie)
-        let el=document.querySelectorAll("div.movie")
-        for(let i=0; i<=el.length-1;i+=1){
-            console.log(i)
-            el[i].parentNode.removeChild(el[i])
-        }
-        moreBtnEl.style.display="block"
-        let typeEls=document.getElementById("type")
-        let type=typeEls.value
-        console.log(type)
-        let yearEls=document.getElementById("year")
-        let year=yearEls.value
-        console.log(year)
-        removeMoreBtn(`"${movie}"`,1,`${year}`,`"${type}"`)
-        getMovies(`"${movie}"`,1,`${year}`,`"${type}"`)
-        getId(`"${movie}"`,1,`${year}`,`"${type}"`)
+    const id = location.pathname.substring(6);
+    const IDMOVIE_URL = `https://www.omdbapi.com/?apikey=${db_apikey}&i=@movieId&plot=full&r=json`;
+    const a = getData(IDMOVIE_URL.replace("@movieId", id));
+    console.log(a);
+    let data = [];
+    data.push(`
+      <div>
+        <div>${a.Title}<div>
+        <div>
+          <div><img src="${a.Poster}"/></div>
+          <div>Actors : ${a.Actors}</div>
+          <div>Awards : ${a.Awards}</div>
+          <div>Director : ${a.Director}</div>
+          <div>Genre : ${a.Genre}</div>
+          <div>${a.Plot}</div>
+          <div>Released : ${a.Released}</div>
+          <div>Runtime : ${a.Runtime}</div>
+          <div>Writer : ${a.Writer}</div>
+          <div>Year : ${a.Year}</div>
+          <div>imdbRating : ${a.imdbRating}</div>
+    `);
+    for (let i of a.Ratings) {
+      data.push(`
+        <div>
+          <div>${i.Source}</div>
+          <div>${i.Value}</div>
+        </div>
+      `);
     }
-})
+    data.push(`
+    <div>
+      <div>
+        <div>평점을 추가해주세요!</div>
+        <div>
+          <select>
+            <option>*****</option>
+            <option>****</option>
+            <option>***</option>
+            <option>**</option>
+            <option>*</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    `);
+    firstRender(data.join(""));
+  }
 
-moreBtnEl.addEventListener("click",()=>{
-    let typeEls=document.getElementById("type")
-    let type=typeEls.value
-    console.log(type)
-    let yearEls=document.getElementById("year")
-    let year=yearEls.value
-    console.log(year)
-    let movie=inputEl.value
-    console.log(movie)
-    let page=1
-    page+=1
-    getMovies(`"${movie}"`,`${page}`,`${year}`,`"${type}"`)
-    removeMoreBtn(`"${movie}"`,`${page}`,`${year}`,`"${type}"`)
-    console.log(page)
-})
+  localStorage.setItem("recomm", recommend);
+};
 
-function modal(){
-    const modal=document.querySelector("div.modal")
-    const bg=document.createElement("div")
-    bg.classList.add("modal-background")
-    const body=document.querySelector("body")
-    body.append(bg)
-    modal.style.display="block"
-    modal.querySelector("div.material-symbols-outlined").addEventListener("click",()=>{
-        bg.remove()
-        modal.style.display="none"
-        modal.parentNode.removeChild(modal)
-    })
-}
+const constructor = async () => {
+  await firstRender();
+  await movieRender();
+};
 
+constructor();
+
+const hello = (event) => {
+  location.pathname = "";
+  location.search = `${event.target.value}`;
+};
+
+addEventListener("search", hello);
+
+addEventListener("hashchange", movieRender);

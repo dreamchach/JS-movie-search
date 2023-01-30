@@ -1,0 +1,6 @@
+.env
+db.js
+/.parcel-cache
+/dist
+/function
+/node_modules
