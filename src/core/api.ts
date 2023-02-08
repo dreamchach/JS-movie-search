@@ -9,11 +9,13 @@ export class Api {
     this.url = url;
   }
 
-  getRequest<AjaxResponse>(): AjaxResponse {
-    this.ajax.open("GET", this.url, false);
-    this.ajax.send();
-
-    return JSON.parse(this.ajax.response) as AjaxResponse;
+  getRequest<AjaxResponse>(cb: (data: AjaxResponse) => void): void {
+    fetch(this.url)
+      .then((response) => response.json())
+      .then(cb)
+      .catch(() => {
+        console.error("데이터를 불러오지 못했습니다.");
+      });
   }
 }
 
@@ -21,8 +23,8 @@ export class searchMovie extends Api {
   constructor(url: string) {
     super(url);
   }
-  getData(): Datas {
-    return this.getRequest<Datas>();
+  getData(cb: (data: Datas) => void): void {
+    return this.getRequest<Datas>(cb);
   }
 }
 
@@ -30,7 +32,7 @@ export class detailMovie extends Api {
   constructor(url: string) {
     super(url);
   }
-  getData(): MovieData {
-    return this.getRequest<MovieData>();
+  getData(cb: (data: MovieData) => void): void {
+    return this.getRequest<MovieData>(cb);
   }
 }
