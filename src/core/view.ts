@@ -7,10 +7,10 @@ declare global {
 }
 
 export abstract class View {
-  private container: HTMLElement;
-  private htmlList: string[];
-  private renderTemplate: string;
-  private template: string;
+  container: HTMLElement;
+  htmlList: string[];
+  renderTemplate: string;
+  template: string;
 
   constructor(containerId: string) {
     const containerElement = document.getElementById(containerId);
@@ -75,26 +75,26 @@ export abstract class View {
       });
     });
   }
-  protected updateView(): void {
+  updateView(): void {
     this.container.innerHTML = this.renderTemplate;
     this.renderTemplate = this.template;
   }
 
-  protected addHtml(htmlString: string): void {
+  addHtml(htmlString: string): void {
     this.htmlList.push(htmlString);
   }
 
-  protected getHtml(): string {
+  getHtml(): string {
     const snapshot = this.htmlList.join("");
     this.clearHtmlList();
     return snapshot;
   }
 
-  protected setTemplateData(key: string, value: string): void {
+  setTemplateData(key: string, value: string): void {
     this.renderTemplate = this.renderTemplate.replace(`{{__${key}__}}`, value);
   }
 
-  protected clearHtmlList(): void {
+  clearHtmlList(): void {
     this.htmlList = [];
   }
   abstract render(): void;
